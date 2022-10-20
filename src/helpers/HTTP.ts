@@ -4,8 +4,8 @@ const apiClient = axios.create({
     baseURL: import.meta.env.VITE_API,
     withCredentials: true, // may or may not need this
     headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
+        Accept: "application/json",
+        "Content-Type": "application/json",
     },
     timeout: 10000,
 });
@@ -23,4 +23,7 @@ export default {
         return apiClient.post("/PATH", {p: a, q: b});
     }
     */
+    signInUser(token: string) {
+        return apiClient.post("/login", { token: token });
+    }
 }
