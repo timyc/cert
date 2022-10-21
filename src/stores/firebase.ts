@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { onAuthStateChanged } from 'firebase/auth';
 import HTTP from '@/helpers/HTTP';
+import ls from '@/helpers/Storage';
 import type { User } from 'firebase/auth';
 import { auth } from '@/firebase/config';
 
@@ -24,7 +25,7 @@ export const firebaseStore = defineStore("userStore", {
                         await HTTP.signInUser(user.accessToken).then((response) => {
                             if (response.data.code === "success") {
                                 this.user = user;
-                                this.jwt = response.data.msg.token;
+                                ls.set("jwt", response.data.msg.token);
                                 this.loggedIn = true;
                                 this.loading = false;
                             }
