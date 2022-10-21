@@ -10,6 +10,7 @@ export const firebaseStore = defineStore("userStore", {
             user: undefined as unknown as User,
             loggedIn: false, // conditional for rendering templates
             loading: false, // may be useful for a spinner
+            jwt: undefined as unknown as string,
         }
     },
     actions: {
@@ -22,6 +23,7 @@ export const firebaseStore = defineStore("userStore", {
                         await HTTP.signInUser(user.accessToken).then((response) => {
                             if (response.data.code === "success") {
                                 this.user = user;
+                                this.jwt = response.data.msg.token;
                                 this.loggedIn = true;
                                 this.loading = false;
                             }
@@ -32,6 +34,7 @@ export const firebaseStore = defineStore("userStore", {
                 } else {
                     console.log('User is signed out');
                     this.user = undefined as unknown as User;
+                    this.jwt = undefined as unknown as string;
                     this.loggedIn = false;
                     this.loading = false;
                 }
