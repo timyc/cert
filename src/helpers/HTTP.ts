@@ -7,7 +7,7 @@ const apiClient = axios.create({
     headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${ ls.get("jwt") || ""}`,
+        "Authorization": `Bearer ${ls.get("jwt") || ""}`,
     },
     timeout: 10000,
 });
@@ -16,16 +16,19 @@ export default {
     // sample GET request
     /*
     getThing(a: string, b: number) {
-        return apiClient.get("/PATH", {params: {p: a, q: b}});
+        return apiClient.get("PATH", {params: {p: a, q: b}});
     }
     */
+    search(query: string, limit: number) {
+        return apiClient.get("search", { params: { query: query, limit: limit } });
+    },
     // sample POST request
     /*
     postThing(a: string, b: number) {
-        return apiClient.post("/PATH", {p: a, q: b});
+        return apiClient.post("PATH", {p: a, q: b});
     }
     */
     signInUser(token: string) {
-        return apiClient.post("/login", { token: token });
-    }
+        return apiClient.post("login", { token: token });
+    },
 }

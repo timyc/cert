@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from "vue-router";
-import { ref } from 'vue'
+import { firebaseStore } from './stores/firebase';
+import { ref, computed } from 'vue';
 import Sidebar from './components/Sidebar.vue';
 import UserWidget from './components/header/UserWidget.vue';
 import Footer from './components/Footer.vue';
 const expanded = ref(false);
 const anim = ref('mi-right');
+const loggedIn = computed(() => firebaseStore().loggedIn);
 function collapse(){
   anim.value = 'mo-right';
   setTimeout(() => {
@@ -21,7 +23,7 @@ function collapse(){
     <el-header class="mt-1">
       <el-row>
         <el-col :span="12" class="d-flex center">
-          <el-icon :size="30" color="#3A3535" @click="expanded = true" v-if="!expanded">
+          <el-icon :size="30" color="#3A3535" @click="expanded = true" v-if="!expanded && loggedIn">
             <Expand />
           </el-icon>
         </el-col>

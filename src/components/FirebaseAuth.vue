@@ -19,7 +19,6 @@ export default defineComponent({
             signInFlow: 'popup',
             callbacks: {
                 signInSuccessWithAuthResult: function (authResult: any) {
-                    console.log('within callback')
                     router.push('/');
                     return false;
                 }
