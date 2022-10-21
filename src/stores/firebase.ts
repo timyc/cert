@@ -20,6 +20,7 @@ export const firebaseStore = defineStore("userStore", {
                 if (user) {
                     console.log('User is signed in with token', user.accessToken);
                     if (!this.user) {
+                        await auth.currentUser?.getIdToken(true); // FORCE refresh the token or else displayName is null for email/password signins
                         await HTTP.signInUser(user.accessToken).then((response) => {
                             if (response.data.code === "success") {
                                 this.user = user;
