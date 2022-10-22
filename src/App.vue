@@ -19,7 +19,7 @@ function collapse(){
 
 <template>
   <el-container style="min-height:100vh">
-    <Sidebar v-if="expanded" :anim="anim" />
+    <Sidebar v-if="expanded" :anim="anim" @clicked="collapse()" />
     <el-header class="mt-1">
       <el-row>
         <el-col :span="12" class="d-flex center">
