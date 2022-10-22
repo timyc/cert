@@ -18,7 +18,7 @@ export default defineComponent({
     methods: {
         logOut() {
             signOut(auth).then(() => {
-                this.$router.push('/');
+                window.location.href = '/';
             }).catch((error) => {
                 console.log(error);
             });

@@ -1,15 +1,15 @@
 <script setup lang="ts">
     type Degree = {
-        name: string,
-        type: number
-        begin: string,
-        end: string
+        degree_name: string,
+        highest_degree: number
+        begin_date: string,
+        end_date: string
     }
     const props = defineProps<{
         name: String,
         degree: Degree,
     }>();
-    const degrees:string[] = ["None", "B.S.","M.S.","PhD"];
+    const degrees:string[] = ["None", "B.S.","B.A.","M.S.","PhD"];
 </script>
 
 <template>
@@ -19,10 +19,10 @@
                 <h3>{{ name }}</h3>
             </el-col>
             <el-col class="text-success">
-                {{ degrees[degree.type] }} in {{ degree.name }}
+                {{ degrees[degree.highest_degree] }} in {{ degree.degree_name }}
             </el-col>
             <el-col>
-                <p>{{ degree.begin }}-{{ degree.end }}</p>
+                <p>{{ degree.begin_date }} to {{ degree.end_date }}</p>
             </el-col>
         </el-row>
     </el-card>

@@ -31,4 +31,7 @@ export default {
     signInUser(token: string) {
         return apiClient.post("login", { token: token });
     },
+    retrieveProfileInfo() {
+        return apiClient.post("profile");
+    }
 }

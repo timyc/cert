@@ -1,16 +1,34 @@
-<script setup lang="ts">
-import { ref } from 'vue';
+<script lang="ts">
+import { defineComponent } from 'vue';
+import HTTP from '@/helpers/HTTP';
 import QrcodeVue from 'qrcode.vue';
 import CollegeWidget from '@/components/CollegeWidget.vue';
-const clicked = ref(false);
+export default defineComponent({
+    data() {
+        return {
+            results: [] as any,
+            clicked: false,
+        }
+    },
+    components: {
+        QrcodeVue,
+        CollegeWidget,
+    },
+    mounted() {
+        HTTP.retrieveProfileInfo().then(response => {
+            this.results = response.data.msg;
+            console.log(this.results);
+        }).catch(error => {
+            console.log(error);
+        });
+    }
+});
 </script>
 
 <template>
     <el-row justify="center">
         <h1>Your Credentials</h1>
-        <CollegeWidget name="Cape Cod College" :degree="{name: 'Diamond Mining',type: 1,begin:'1969',end:'1988'}" />
-        <CollegeWidget name="University of California, Los Angeles"
-            :degree="{name: 'Theoretical Mathematics',type: 3,begin:'2019',end:'2021'}" />
+        <CollegeWidget v-for="result in results" :name="result.name" :degree="JSON.parse(result.json)" />
     </el-row>
     <el-row justify="center" class="mt-3" v-if="!clicked">
         <el-icon :size="60" color="#3A3535">
