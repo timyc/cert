@@ -1,7 +1,7 @@
 import axios from "axios";
 import ls from "@/helpers/Storage";
 
-const apiClient = axios.create({
+let apiClient = axios.create({
     baseURL: import.meta.env.VITE_API,
     withCredentials: true,
     headers: {
@@ -11,6 +11,19 @@ const apiClient = axios.create({
     },
     timeout: 10000,
 });
+
+export function reset() {
+    apiClient = axios.create({
+        baseURL: import.meta.env.VITE_API,
+        withCredentials: true,
+        headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${ls.get("jwt") || ""}`,
+        },
+        timeout: 10000,
+    });
+}
 
 export default {
     // sample GET request
