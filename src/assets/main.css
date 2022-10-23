@@ -64,7 +64,8 @@ a {
 }
 
 .sidenav {
-  position: absolute;
+  position: fixed;
+  left: 0;
   height:100vh;
   z-index:1000;
   background:lightgray;
