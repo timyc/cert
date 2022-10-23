@@ -17,7 +17,6 @@ export default defineComponent({
     mounted() {
         HTTP.retrieveProfileInfo().then(response => {
             this.results = response.data.msg;
-            console.log(this.results);
         }).catch(error => {
             console.log(error);
         });

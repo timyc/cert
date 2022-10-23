@@ -21,7 +21,7 @@ function collapse(){
   <el-container style="min-height:100vh">
     <Sidebar v-if="expanded" :anim="anim" @clicked="collapse()" />
     <el-header class="mt-1">
-      <el-row>
+      <el-row class="w-100">
         <el-col :span="12" class="d-flex center">
           <el-icon :size="30" color="#3A3535" @click="expanded = true" v-if="!expanded && loggedIn">
             <Expand />

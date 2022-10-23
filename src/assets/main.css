@@ -12,7 +12,9 @@ html {
 }
 
 body {
-  margin: 0;
+  max-width: 40rem;
+  min-width: 22rem;
+  margin: 0 auto;
 }
 
 p {
@@ -47,6 +49,9 @@ a {
 .sbar > .el-input__wrapper {
   border-radius: 50px;
   box-shadow: 5px 5px rgb(255, 139, 61);
+}
+.w-100 {
+  width: 100%;
 }
 .orange-shadow {
   position:absolute;

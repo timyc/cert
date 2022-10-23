@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { degreeString } from '@/helpers/Degree';
     type Degree = {
         degree_name: string,
         highest_degree: number
@@ -9,7 +10,6 @@
         name: String,
         degree: Degree,
     }>();
-    const degrees:string[] = ["None", "B.S.","B.A.","M.S.","PhD"];
 </script>
 
 <template>
@@ -19,7 +19,7 @@
                 <h3>{{ name }}</h3>
             </el-col>
             <el-col class="text-success">
-                {{ degrees[degree.highest_degree] }} in {{ degree.degree_name }}
+                {{ degreeString(degree.highest_degree, degree.degree_name) }}
             </el-col>
             <el-col>
                 <p>{{ degree.begin_date }} to {{ degree.end_date }}</p>
