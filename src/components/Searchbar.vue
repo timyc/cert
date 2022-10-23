@@ -46,12 +46,17 @@ export default defineComponent({
 <template>
     <el-input v-model="query" class="w-50 m-2 sbar" placeholder="Search by student, credential, or university..."
         suffix-icon="Search" />
-    <el-table :data="results" style="width: 100%" v-if="results.length > 0">
+    <el-table :data="results" class="table-results" style="width: 100%" v-if="results.length > 0">
         <el-table-column prop="name" label="Universities"></el-table-column>
     </el-table>
 </template>
 
 <style scoped>
+.table-results {
+    position: absolute;
+    margin-top: 40px;
+    z-index: 69;
+}
 .sbar:before {
     content: "";
     z-index: -1;
