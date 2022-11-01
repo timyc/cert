@@ -46,5 +46,8 @@ export default {
     },
     retrieveProfileInfo() {
         return apiClient.post("profile");
-    }
+    },
+    signInUniversity(uni_id: number) {
+        return apiClient.post("shibboleth", { universityId: uni_id })
+    },
 }

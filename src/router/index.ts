@@ -24,6 +24,11 @@ const router = createRouter({
       name: "credentials",
       component: () => import("../views/CredentialsView.vue"),
     },
+    {
+      path: "/error",
+      name: "error",
+      component: () => import("../views/ErrorView.vue"),
+    },
   ],
 });
 

@@ -30,6 +30,15 @@ export default defineComponent({
                     console.log("sorry there was an error", error);
                 })
                 .finally(() => { this.canSearch = false });
+        },
+        clicked(result: any) {
+            HTTP.signInUniversity(result.id)
+                .then((response) => {
+                   window.location.replace(`${import.meta.env.VITE_SHIB}?target=${encodeURIComponent(`${import.meta.env.VITE_SHIBCB}?token=${response.data.msg.token}`)}&providerId=${encodeURIComponent(`${response.data.msg.url}`)}`); 
+                })
+                .catch((error) => {
+
+                });
         }
     },
     updated() {
@@ -46,7 +55,7 @@ export default defineComponent({
 <template>
     <el-input v-model="query" class="w-50 m-2 sbar" placeholder="Search by student, credential, or university..."
         suffix-icon="Search" />
-    <el-table :data="results" class="table-results" style="width: 100%" v-if="results.length > 0">
+    <el-table :data="results" class="table-results" @row-click="(e: any) => clicked(e)" v-if="results.length > 0">
         <el-table-column prop="name" label="Universities"></el-table-column>
     </el-table>
 </template>
@@ -55,6 +64,7 @@ export default defineComponent({
 .table-results {
     position: absolute;
     margin-top: 40px;
+    left: 0;
     z-index: 69;
 }
 .sbar:before {
