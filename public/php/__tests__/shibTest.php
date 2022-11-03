@@ -19,7 +19,7 @@ if ($result === false) {
  * 3. Server sends the user's information to the client
  * 4. Socket closes after receiving the "bye" message
  */ 
-$init = '["init",133769420]';
+$init = "[\"init\",133769420]";
 socket_write($socket, $init, strlen($init));
 $out = '';
 while ($out = socket_read($socket, 2048)) {
