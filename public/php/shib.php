@@ -79,6 +79,10 @@ if ($res['status'] === 'success') {
             break;
         }
     }
+    // Close the socket
+    socket_close($socket);
+    // Redirect to the success page
+    header('Location: ' . HOME_PAGE . '/credentials');
 } else {
     // Redirect to the error page
     header('Location: ' . HOME_PAGE . '/error');

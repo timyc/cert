@@ -53,7 +53,10 @@ export default defineComponent({
             <h1>{{ user.displayName }}</h1>
         </el-row>
         <el-row justify="center" class="mt-1" v-for="result in results">
-            <ProfileUniWidget :name="result.name" :image="result.image" :json="JSON.parse(result.json)" />
+            <template v-for="res in JSON.parse(result.json)">
+                <ProfileUniWidget :name="result.name" :image="result.image" :json="res" />
+            </template>
+            
         </el-row>
         <el-row justify="center" class="mt-1">
             <el-button type="success" style="font-size:30px;padding:30px">Submit</el-button>

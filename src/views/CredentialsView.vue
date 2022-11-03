@@ -36,7 +36,10 @@ export default defineComponent({
 <template>
     <el-row justify="center">
         <h1>Your Credentials</h1>
-        <CollegeWidget v-for="result in results" :name="result.name" :degree="JSON.parse(result.json)" />
+        <template v-for="result in results">
+            <CollegeWidget v-for="res in JSON.parse(result.json)" :name="result.name" :degree="res" />
+        </template>
+        
     </el-row>
     <el-row justify="center" class="mt-3" v-if="!clicked" @click="dialogVisible = true">
         <el-icon :size="60" color="#3A3535">
