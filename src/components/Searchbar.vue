@@ -1,6 +1,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import HTTP from '@/helpers/HTTP';
+import { firebaseStore } from '@/stores/firebase';
 let delay = (() => {
     let timer = 0;
     return (callback: any, ms: any, that: any) => {
@@ -9,6 +10,12 @@ let delay = (() => {
     };
 })();
 export default defineComponent({
+    setup() {
+        const store = firebaseStore();
+        return {
+            store,
+        };
+    },
     data() {
         return {
             query: '',
@@ -19,7 +26,7 @@ export default defineComponent({
     },
     methods: {
         search(q: string, lim: number) {
-            if (q.length < 1 || !this.canSearch) { // Don't want to request empty queries
+            if (q.length < 1 || !this.canSearch || !this.store.loggedIn) { // Don't want to request empty queries
                 return;
             }
             HTTP.search(q, lim)
@@ -53,7 +60,7 @@ export default defineComponent({
 });
 </script>
 <template>
-    <el-input v-model="query" class="w-50 m-2 sbar" placeholder="Search by student, credential, or university..."
+    <el-input v-model="query" class="w-50 m-2 sbar" placeholder="Search by university"
         suffix-icon="Search" />
     <el-table :data="results" class="table-results" @row-click="(e: any) => clicked(e)" v-if="results.length > 0">
         <el-table-column prop="name" label="Universities"></el-table-column>

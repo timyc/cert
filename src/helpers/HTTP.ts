@@ -35,6 +35,9 @@ export default {
     search(query: string, limit: number) {
         return apiClient.get("search", { params: { query: query, limit: limit } });
     },
+    retrieveSharedProfile(id: string) {
+        return apiClient.get("getSharedProfile", { params: { id: id } });
+    },
     // sample POST request
     /*
     postThing(a: string, b: number) {
@@ -50,4 +53,10 @@ export default {
     signInUniversity(uni_id: number) {
         return apiClient.post("shibboleth", { universityId: uni_id })
     },
+    updateAvatar(avatar: string) {
+        return apiClient.post("updateAvatar", { avatar: avatar });
+    },
+    profileLink() {
+        return apiClient.post("link");
+    }
 }

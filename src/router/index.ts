@@ -25,6 +25,11 @@ const router = createRouter({
       component: () => import("../views/CredentialsView.vue"),
     },
     {
+      path: "/profile/:id",
+      name: "sharedProfile",
+      component: () => import("../views/ProfileSharedView.vue"),
+    },
+    {
       path: "/error",
       name: "error",
       component: () => import("../views/ErrorView.vue"),

@@ -4,7 +4,8 @@ import { degreeString } from '@/helpers/Degree';
         degree_name: string,
         highest_degree: number
         begin_date: string,
-        end_date: string
+        end_date: string,
+        holder?: string,
     }
     const props = defineProps<{
         name: String,
@@ -23,6 +24,9 @@ import { degreeString } from '@/helpers/Degree';
             </el-col>
             <el-col>
                 <p>{{ degree.begin_date }} to {{ degree.end_date }}</p>
+            </el-col>
+            <el-col v-if="degree.holder">
+                <p>Holder: {{ degree.holder }}</p>
             </el-col>
         </el-row>
     </el-card>

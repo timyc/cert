@@ -3,7 +3,6 @@ import { defineComponent, computed } from 'vue';
 import { firebaseStore } from '@/stores/firebase';
 import ProfileUniWidget from '@/components/ProfileUniWidget.vue';
 import { yearsBetween, degreeString } from '@/helpers/Degree';
-import { ElMessage, ElMessageBox } from 'element-plus';
 import HTTP from '@/helpers/HTTP';
 export default defineComponent({
     data() {
@@ -11,6 +10,7 @@ export default defineComponent({
             results: [] as any,
             avatar: '',
             loading: true,
+            error: false,
         }
     },
     components: {
@@ -22,10 +22,17 @@ export default defineComponent({
         return { user };
     },
     mounted() {
-        HTTP.retrieveProfileInfo()
+        HTTP.retrieveSharedProfile(this.$route.params.id as string)
             .then(response => {
-                this.results = response.data.msg;
-                this.avatar = this.results[1].avatar;
+                if (response.data.code != 'success') {
+                    this.error = true;
+                } else {
+                    this.results = response.data.msg;
+                    this.avatar = this.results[1].avatar;
+                }
+                
+            }).catch(() => {
+                this.error = true;
             }).finally(() => {
                 this.loading = false;
             });
@@ -37,37 +44,6 @@ export default defineComponent({
         degreeString(highest_degree: number, degree_name: string) {
             return degreeString(highest_degree, degree_name);
         },
-        changeAvatar() {
-            ElMessageBox.prompt('Please input your avatar URL', 'Tip', {
-                confirmButtonText: 'OK',
-                cancelButtonText: 'Cancel',
-                inputPattern:
-                    /(https?:\/\/.*\.(?:png|jpg))/, // not the best regex
-                inputErrorMessage: 'Invalid URL',
-            })
-                .then(({ value }) => {
-                    HTTP.updateAvatar(value)
-                        .then(response => {
-                            ElMessage({
-                                type: 'success',
-                                message: 'Avatar change success',
-                            });
-                            this.avatar = value;
-                        })
-                        .catch(error => {
-                            ElMessage({
-                                type: 'error',
-                                message: 'An error occured, please try again later',
-                            });
-                        });
-                })
-                .catch(() => {
-                    ElMessage({
-                        type: 'info',
-                        message: 'Change canceled',
-                    })
-                })
-        }
     }
 });
 </script>
@@ -76,17 +52,19 @@ export default defineComponent({
     <div v-if="loading">
         loading...
     </div>
-    <div v-if="!loading">
+    <div v-if="error">
+        This link is expired or an error has occured.
+    </div>
+    <div v-if="!loading && !error">
         <el-row v-if="results[1].access > 1">
             <el-tag class="ml-2" type="success">Verified User</el-tag>
         </el-row>
         <el-row justify="center">
             <el-avatar :size="200"
-                :src="avatar != '' ? avatar : 'https://i.imgur.com/hkNb2Bi.jpg'" fit="fill"
-                @click="changeAvatar" />
+                :src="avatar != '' ? avatar : 'https://i.imgur.com/hkNb2Bi.jpg'" fit="fill" />
         </el-row>
         <el-row justify="center">
-            <h1>{{ user.displayName }}</h1>
+            <h1>{{ results[1].name }}</h1>
         </el-row>
         <el-row justify="center" class="mt-1" v-for="result in results[0]">
             <template v-for="res in JSON.parse(result.json)">

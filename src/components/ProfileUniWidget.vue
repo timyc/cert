@@ -4,7 +4,8 @@ type json = {
     begin_date: string,
     end_date: string,
     degree_name: string,
-    highest_degree: number
+    highest_degree: number,
+    holder?: string,
 }
 const props = defineProps<{
     image: string,
@@ -30,6 +31,9 @@ const props = defineProps<{
             </el-col>
             <el-col :span="12" class="center d-flex">
                 {{ name }}
+            </el-col>
+            <el-col class="center" v-if="json.holder">
+                <p>Holder: {{ json.holder }}</p>
             </el-col>
         </el-row>
     </el-card>

@@ -38,7 +38,6 @@ export default defineComponent({
             <template #dropdown>
                 <el-dropdown-menu>
                     <el-dropdown-item @click="logOut">Sign Out</el-dropdown-item>
-                    <el-dropdown-item>Action 2</el-dropdown-item>
                 </el-dropdown-menu>
             </template>
         </el-dropdown>
