@@ -24,6 +24,7 @@ export default defineComponent({
     mounted() {
         if (!this.userStore.loggedIn) {
             this.$router.push('/auth');
+            return;
         }
         HTTP.retrieveProfileInfo()
             .then(response => {
