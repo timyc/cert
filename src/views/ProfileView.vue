@@ -19,9 +19,12 @@ export default defineComponent({
     setup() {
         const userStore = firebaseStore();
         const user = computed(() => userStore.user);
-        return { user };
+        return { user, userStore };
     },
     mounted() {
+        if (!this.userStore.loggedIn) {
+            this.$router.push('/auth');
+        }
         HTTP.retrieveProfileInfo()
             .then(response => {
                 this.results = response.data.msg;

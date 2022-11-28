@@ -3,9 +3,16 @@ import { defineComponent } from 'vue';
 import HTTP from '@/helpers/HTTP';
 import QrcodeVue from 'qrcode.vue';
 import Searchbar from '@/components/Searchbar.vue';
+import { firebaseStore } from '@/stores/firebase';
 import { ElLoading } from 'element-plus';
 import CollegeWidget from '@/components/CollegeWidget.vue';
 export default defineComponent({
+    setup() {
+        const store = firebaseStore();
+        return {
+            store,
+        };
+    },
     data() {
         return {
             results: [] as any,
@@ -20,6 +27,9 @@ export default defineComponent({
         Searchbar,
     },
     mounted() {
+        if (!this.store.loggedIn) {
+            this.$router.push('/auth');
+        }
         HTTP.retrieveProfileInfo().then(response => {
             this.results = response.data.msg[0];
         }).catch(error => {
