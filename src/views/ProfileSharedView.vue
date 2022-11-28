@@ -72,10 +72,6 @@ export default defineComponent({
             </template>
 
         </el-row>
-        <el-row justify="center" class="mt-1">
-            <el-button type="success" style="font-size:30px;padding:30px" @click="$router.push('/credentials')">Submit
-            </el-button>
-        </el-row>
     </div>
 
 </template>
