@@ -28,9 +28,11 @@ export default defineComponent({
 </script>
 
 <template>
-    <el-icon :size="30" color="#3A3535" class="no-inherit">
+    <div class="no-inherit">
+    <el-icon :size="30" color="#3A3535" >
         <Avatar />
     </el-icon>
+    </div>
     <router-link to="/auth" class="d-flex" v-if="!creds">Sign In</router-link>
     <div class="d-flex" v-else>
         <el-dropdown>
