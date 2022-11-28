@@ -1,59 +1,124 @@
-# cert
+# Certitude App
 
-This template should help get you started developing with Vue 3 in Vite.
+Mobile App for Certitude. Certitude allows students to keep verified university credentials in one place for faster verifications.
 
-## Recommended IDE Setup
+## Pre-requisites
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+* RHEL-based Linux Server
+* 10GB of SSD Disk Space
+* 6GB of DDR4 RAM
+* 1 Intel Xeon CPU (2.0GHz+)
+* node.js 16+
+* PHP 8.0+
+* NGINX 1.20+ compiled with the Shibboleth module
+* MariaDB 10.5+/MySQL 8+
 
-## Type Support for `.vue` Imports in TS
+## Installation Instructions
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
+1. Build this app and add a basic config to your NGINX webserver
+   ```
+   # Sample Code
+    server {
+        root /usr/share/nginx/cert-m;
 
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
+        index index.html;
+        server_name MOBILE.YOURDOMAIN.TLD;
 
-1. Disable the built-in TypeScript Extension
-    1) Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-    2) Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
 
-## Customize configuration
+        location / {
+                try_files $uri $uri/ /index.html =404;
+        }
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+        listen 443 ssl;
+        ssl_certificate /path/to/your/certificate;
+        ssl_certificate_key /path/to/your/private/key;
 
-## Project Setup
+    }
+    server {
+        if ($host = MOBILE.YOURDOMAIN.TLD) {
+            return 301 https://$host$request_uri;
+        }
+        listen 80 ;
+        listen [::]:80 ;
+        server_name MOBILE.YOURDOMAIN.TLD;
+        return 404;
+    }
+   ```
+2. Install the latest Shibboleth Service Provider
+3. Build the [Certitude desktop app](https://github.com/timyc/cert-desktop) and add another config to your NGINX webserver. Adjust reverse proxies accordingly.
+   ```
+   # Sample config
+   server {
+        root /usr/share/nginx/cert-d;
 
-```sh
-npm install
-```
+        index index.html;
+        server_name YOURDOMAIN.TLD;
 
-### Compile and Hot-Reload for Development
+        #add_header 'Access-Control-Allow-Origin' "${scheme}://MOBILE.YOURDOMAIN.TLD" always;
+        include /etc/nginx/default.d/*.conf;
+        location / {
+                if ($http_user_agent ~* '(iPhone|iPod|android|blackberry)') {
+                        return 307 https://MOBILE.YOURDOMAIN.TLD/;
+                }
+                try_files $uri $uri/ /index.html =404;
+        }
 
-```sh
-npm run dev
-```
+        location /circinus/ {
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_pass http://127.0.0.1:6969/;
+                proxy_http_version 1.1;
+                proxy_set_header Upgrade $http_upgrade;
+                proxy_set_header Connection 'upgrade';
+                proxy_set_header Host $host;
+                proxy_cache_bypass $http_upgrade;
+        }
+        # Shibboleth
 
-### Type-Check, Compile and Minify for Production
+        location = /shibauthorizer {
+          internal;
+          include fastcgi_params;
+          fastcgi_pass unix:/etc/shibboleth/shibauthorizer.sock;
+        }
 
-```sh
-npm run build
-```
+        location /Shibboleth.sso {
+          include fastcgi_params;
+          fastcgi_pass unix:/etc/shibboleth/shibresponder.sock;
+        }
 
-### Run Unit Tests with [Vitest](https://vitest.dev/)
+        location /shibboleth-sp {
+          alias /usr/share/shibboleth/;
+        }
 
-```sh
-npm run test:unit
-```
+        # Login location configuration
+        location /secret {
+                shib_request /shibauthorizer;
+                shib_request_use_headers on;
+        }
+        location ^~ /php/ {
+            shib_request_use_headers on;
+            shib_request /shibauthorizer;
+            shib_request_set $shib_remote_user $upstream_http_variable_remote_user;
+            add_header X-TEST $shib_remote_user;
+            fastcgi_index  shib.php;
+            include        fastcgi_params;
+            fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+            fastcgi_pass   unix:/run/php-fpm/www.sock;
+        }
+        listen 443 ssl;
+        ssl_certificate /path/to/your/certificate;
+        ssl_certificate_key /path/to/your/private/key;
 
-### Run End-to-End Tests with [Cypress](https://www.cypress.io/)
-
-```sh
-npm run build
-npm run test:e2e # or `npm run test:e2e:ci` for headless testing
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
+    }
+    server {
+        if ($host = YOURDOMAIN.TLD) {
+            return 301 https://$host$request_uri;
+        }
+        listen 80 ;
+        listen [::]:80 ;
+        server_name YOURDOMAIN.TLD;
+        return 404;
+    }
+   ```
+4. Configure the MariaDB/MySQL server and upload the provided SQL file in the [Certitude server](https://github.com/timyc/cert-server) repo.
+5. Build the [Certitude server](https://github.com/timyc/cert-server) and run it using something like PM2
+6. Beg a university to configure and install the [Certitude Service Provider](https://github.com/timyc/cert-daemon) on their server.
