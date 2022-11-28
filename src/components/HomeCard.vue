@@ -1,6 +1,6 @@
 <template>
     <el-col class="d-flex">
-        <img class="x-center" src="@/assets/verisplash.png" style="max-width:60%" />
+        <img class="x-center workers" src="@/assets/workers.png" style="max-width:60%" />
     </el-col>
 
     <el-card class="box-card center">

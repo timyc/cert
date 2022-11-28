@@ -4,7 +4,9 @@ import HomeCard from '@/components/HomeCard.vue';
 </script>
 <template>
   <el-row class="x-center" justify="center" style="width:270px">
-    <h1 class="d-flex">Certitude is Seamless<span class="orange-shadow"></span></h1>
+    <div>
+    <h1 class="top-text">Certitude is <span class="seam">Seamless</span></h1>
+  </div>
   </el-row>
   <el-row justify="center">
     <p style="text-align:center">
